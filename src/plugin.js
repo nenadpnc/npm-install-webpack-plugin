@@ -33,7 +33,7 @@ function NpmInstallPlugin(options) {
   this.resolving = {};
 
   installer.checkPackage();
-  installer.checkBabel();
+  //installer.checkBabel();
 }
 
 NpmInstallPlugin.prototype.apply = function(compiler) {
@@ -61,17 +61,13 @@ NpmInstallPlugin.prototype.install = function(result) {
     return;
   }
 
-  var dep = installer.check(result.request);
+  var dev = this.options.dev;
 
-  if (dep) {
-    var dev = this.options.dev;
-
-    if (typeof this.options.dev === "function") {
-      dev = !!this.options.dev(result.request, result.path);
-    }
-
-    installer.install(dep, Object.assign({}, this.options, { dev: dev }));
+  if (typeof this.options.dev === "function") {
+    dev = !!this.options.dev(result.request, result.path);
   }
+
+  installer.install(Object.assign({}, this.options, { dev: dev }));
 }
 
 NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
